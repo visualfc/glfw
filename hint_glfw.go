@@ -2,7 +2,7 @@
 
 package glfw
 
-import "github.com/go-gl/glfw/v3.3/glfw"
+import "github.com/visualfc/glfw-2/v3.2/glfw"
 
 type Hint int
 
@@ -11,7 +11,6 @@ const (
 	DepthBits   = Hint(glfw.DepthBits)
 	StencilBits = Hint(glfw.StencilBits)
 	Samples     = Hint(glfw.Samples)
-	Resizable   = Hint(glfw.Resizable)
 
 	// These hints used for WebGL contexts, ignored on desktop.
 	PremultipliedAlpha = noopHint

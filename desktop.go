@@ -3,11 +3,11 @@
 package glfw
 
 import (
-	"io"
 	"os"
 	"runtime"
 
-	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/visualfc/glfw-2/v3.2/glfw"
+	"golang.org/x/tools/godoc/vfs"
 )
 
 func init() {
@@ -138,6 +138,33 @@ func (w *Window) SetCharCallback(cbfun CharCallback) (previous CharCallback) {
 	}
 
 	p := w.Window.SetCharCallback(wrappedCbfun)
+	_ = p
+
+	// TODO: Handle previous.
+	return nil
+}
+
+type PreeditCallback func(w *Window, text []rune, blocks []int, focusedBlock int)
+
+func (w *Window) SetPreeditCallback(cbfun PreeditCallback) (previous PreeditCallback) {
+	wrappedCbfun := func(_ *glfw.Window, text []rune, blocks []int, focusedBlock int) {
+		cbfun(w, text, blocks, focusedBlock)
+	}
+
+	p := w.Window.SetPreeditCallback(wrappedCbfun)
+	_ = p
+
+	// TODO: Handle previous.
+	return nil
+}
+
+type IMEStatusCallback func(w *Window)
+
+func (w *Window) SetIMEStatusCallback(cbfun IMEStatusCallback) (previous IMEStatusCallback) {
+	wrappedCbfun := func(_ *glfw.Window) {
+		cbfun(w)
+	}
+	p := w.Window.SetIMEStatusCallback(wrappedCbfun)
 	_ = p
 
 	// TODO: Handle previous.
@@ -372,10 +399,10 @@ const (
 	ModSuper   = ModifierKey(glfw.ModSuper)
 )
 
-// Open opens a named asset. It's the caller's responsibility to close it when done.
+// Open opens a named asset.
 //
 // For now, assets are read directly from the current working directory.
-func Open(name string) (io.ReadCloser, error) {
+func Open(name string) (vfs.ReadSeekCloser, error) {
 	return os.Open(name)
 }
 
